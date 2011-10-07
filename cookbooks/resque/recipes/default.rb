@@ -18,17 +18,20 @@ if ['db_master'].include?(node[:instance_role])
     end
   
 
-    template "/data/#{app}/shared/config/resque.yml" do
-      owner node[:owner_name]
-      group node[:owner_name]
-      mode 0644
-      source "resque_yaml.conf.erb"
-      variables({        
-        :db_host => node["db_host"]
-      })
-    end
-    
+  
     node[:applications].each do |app, data|
+      
+      template "/data/#{app}/shared/config/resque.yml" do
+        owner node[:owner_name]
+        group node[:owner_name]
+        mode 0644
+        source "resque_yaml.conf.erb"
+        variables({        
+          :db_host => node["db_host"]
+        })
+      end
+      
+      
       template "/etc/monit.d/resque_#{app}.monitrc" do 
         owner 'root' 
         group 'root' 
