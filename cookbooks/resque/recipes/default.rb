@@ -2,7 +2,7 @@
 # Cookbook Name:: resque
 # Recipe:: default
 #
-if ['db_host'].include?(node[:instance_role])
+if ['db_master'].include?(node[:instance_role])
   
   execute "install resque gem" do
     command "gem install resque redis redis-namespace yajl-ruby -r"
