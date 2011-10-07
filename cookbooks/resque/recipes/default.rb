@@ -17,20 +17,7 @@ if ['db_master'].include?(node[:instance_role])
         worker_count = 2
     end
   
-
-  
     node[:applications].each do |app, data|
-      
-      template "/data/#{app}/shared/config/resque.yml" do
-        owner node[:owner_name]
-        group node[:owner_name]
-        mode 0644
-        source "resque_yaml.conf.erb"
-        variables({        
-          :db_host => node["db_host"]
-        })
-      end
-      
       
       template "/etc/monit.d/resque_#{app}.monitrc" do 
         owner 'root' 
@@ -65,4 +52,19 @@ if ['db_master'].include?(node[:instance_role])
       }
     end
   end 
+end
+
+
+if ['app_aster'].include?(node[:instance_role])
+  node[:applications].each do |app, data|
+    template "/data/#{node['app_master']}/shared/config/resque.yml" do
+      owner node[:owner_name]
+      group node[:owner_name]
+      mode 0644
+      source "resque_yaml.conf.erb"
+      variables({        
+        :db_host => node["db_host"]
+      })
+    end
+  end
 end
